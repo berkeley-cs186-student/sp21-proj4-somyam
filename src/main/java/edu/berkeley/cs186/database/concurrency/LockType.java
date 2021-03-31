@@ -1,5 +1,10 @@
 package edu.berkeley.cs186.database.concurrency;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * Utility methods to track the relationships between different lock types.
  */
@@ -21,8 +26,17 @@ public enum LockType {
         if (a == null || b == null) {
             throw new NullPointerException("null lock type");
         }
+
         // TODO(proj4_part1): implement
 
+        //both are of type NL S IX
+        ArrayList<LockType> vals = new ArrayList<>(Arrays.asList(NL, S, IX));
+        if (a.equals(NL) || b.equals(NL) || (a.equals(b) && vals.contains(a))) {
+            return true;
+            //if one is an S lock, other cant be an X
+        } else if (a.equals(IS) && !b.equals(X) || !a.equals(X) && b.equals(IS)) {
+            return true;
+        }
         return false;
     }
 
@@ -54,7 +68,13 @@ public enum LockType {
             throw new NullPointerException("null lock type");
         }
         // TODO(proj4_part1): implement
-
+        if (childLockType.equals(NL) || parentLockType.equals(IX)) {
+            return true;
+        } else if (parentLockType.equals(IS) && (childLockType.equals(S) || childLockType.equals(IS))) {
+            return true;
+        } else if (parentLockType.equals(SIX) && (childLockType.equals(X) || childLockType.equals(IX))){
+            return true;
+        }
         return false;
     }
 
@@ -70,6 +90,15 @@ public enum LockType {
         }
         // TODO(proj4_part1): implement
 
+        if ((substitute.equals(X) || substitute.equals(SIX)) && required.equals(S)) {
+            return true;
+        } else if (required.equals(NL)) {
+            return true;
+        } else if (required.equals(substitute)) {
+            return true;
+        } else if (substitute.equals(IX) && required.equals(IS)) {
+            return true;
+        }
         return false;
     }
 
