@@ -2,6 +2,9 @@ package edu.berkeley.cs186.database.concurrency;
 
 import edu.berkeley.cs186.database.TransactionContext;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * LockUtil is a declarative layer which simplifies multigranularity lock
  * acquisition for the user (you, in the last task of Part 2). Generally
@@ -40,6 +43,13 @@ public class LockUtil {
         LockContext parentContext = lockContext.parentContext();
         LockType effectiveLockType = lockContext.getEffectiveLockType(transaction);
         LockType explicitLockType = lockContext.getExplicitLockType(transaction);
+
+        if (effectiveLockType.equals(requestType)) return;
+        if (LockType.substitutable(effectiveLockType, requestType)) return;
+//        if (effectiveLockType.equals(LockType.NL)) {
+//            List<LockContext> asc = new ArrayList<>();
+//        }
+
 
         // TODO(proj4_part2): implement
         return;
