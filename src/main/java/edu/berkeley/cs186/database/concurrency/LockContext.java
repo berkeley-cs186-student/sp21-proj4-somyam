@@ -96,6 +96,7 @@ public class LockContext {
         // TODO(proj4_part2): implement
 //rred error
         if (readonly) throw new UnsupportedOperationException("read only.");
+
         if (parent != null && !LockType.canBeParentLock(parent.getExplicitLockType(transaction), lockType)) {
             throw new InvalidLockException("if the request is invalid");
         }
@@ -136,7 +137,6 @@ public class LockContext {
         if (numChildLocks.getOrDefault(trans, 0) > 0) {
             throw new InvalidLockException("multigranularity issue");
         }
-
         lockman.release(transaction,getResourceName());
         if(parent == null) return;
         if (parent.numChildLocks.containsKey(trans)) {
@@ -276,7 +276,18 @@ public class LockContext {
     public LockType getEffectiveLockType(TransactionContext transaction) {
         if (transaction == null) return LockType.NL;
         // TODO(proj4_part2): implement
-        return LockType.NL;
+        LockType e= getExplicitLockType(transaction);
+        if (e == null || e.equals(LockType.NL)) {
+            if (parent == null) {
+                return LockType.NL;
+            }
+            if(parent.getEffectiveLockType(transaction).equals(LockType.IS) || parent.getEffectiveLockType(transaction).equals(LockType.IS)) {
+                return LockType.NL;
+            }
+            return parent.getEffectiveLockType(transaction);
+        }
+        if (hasSIXAncestor(transaction)) return LockType.S;
+        return e;
     }
 
     /**

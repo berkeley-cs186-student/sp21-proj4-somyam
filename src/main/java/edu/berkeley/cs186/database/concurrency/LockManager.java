@@ -288,8 +288,8 @@ public class LockManager {
             throws NoLockHeldException {
         // TODO(proj4_part1): implement
         // You may modify any part of this method.
-        boolean held = false;
         synchronized (this) {
+            boolean held = false;
             long trans = transaction.getTransNum();
             ResourceEntry entry = getResourceEntry(name);
             for (Lock l: entry.locks) {
