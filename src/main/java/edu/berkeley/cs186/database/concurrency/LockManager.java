@@ -257,7 +257,7 @@ public class LockManager {
         boolean shouldBlock = false;
         synchronized (this) {
             long trans = transaction.getTransNum();
-            ResourceEntry entry =getResourceEntry(name);
+            ResourceEntry entry = getResourceEntry(name);
             if (entry.getTransactionLockType(trans) != LockType.NL) {
                 throw new DuplicateLockRequestException("transaction has resource already.");
             }

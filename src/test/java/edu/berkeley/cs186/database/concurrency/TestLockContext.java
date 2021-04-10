@@ -336,7 +336,6 @@ public class TestLockContext {
         runner.run(3, () -> dbLockContext.acquire(t4, LockType.IS));
 
         runner.run(1, () -> tableLockContext.acquire(t2, LockType.S));
-        runner.run(1, () -> tableLockContext.acquire(t2, LockType.S));
         runner.run(2, () -> tableLockContext.acquire(t3, LockType.IS));
 
         runner.run(2, () -> pageLockContext.acquire(t3, LockType.S));

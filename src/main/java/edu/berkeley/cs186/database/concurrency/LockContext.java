@@ -94,7 +94,7 @@ public class LockContext {
     public void acquire(TransactionContext transaction, LockType lockType)
             throws InvalidLockException, DuplicateLockRequestException {
         // TODO(proj4_part2): implement
-//rred error
+//read error
         if (readonly) throw new UnsupportedOperationException("read only.");
 
         if (parent != null && !LockType.canBeParentLock(parent.getExplicitLockType(transaction), lockType)) {
@@ -103,6 +103,7 @@ public class LockContext {
         if (lockType.equals(LockType.SIX) && hasSIXAncestor(transaction)) {
             throw new InvalidLockException("if the SIX request is invalid ");
         }
+
         lockman.acquire(transaction, getResourceName(), lockType);
         if (parent == null) {
             return;
